@@ -1,4 +1,7 @@
 from app.users.models import *
 
-dbUsers = DBUsers
-dbPosts = DBPost
+class DB():
+    dbUsers = DBUsers()
+    dbPosts = DBPost()
+    
+db = DB()
