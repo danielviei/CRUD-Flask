@@ -10,6 +10,6 @@ class UserSchema(marsh.Schema):
 class PostSchema(marsh.Schema):
     id = fields.Integer()
     user = fields.Integer()
-    date = fields.DateTime
+    date = fields.DateTime()
     content: fields.String()
 

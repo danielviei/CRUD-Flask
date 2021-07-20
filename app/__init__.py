@@ -1,18 +1,18 @@
 from flask import Flask, jsonify
 from flask_restful import Api
 
-from app.common.error_handling import ObjectNotFound, AppErrorBaseClass
+from app.common.error_handling import ObjectNoFound, AppErrorBaseClass
 from app.db import db
 from app.users.api_v1_0.resources import userPostBP
-from .ext import ma
+from .ext import marsh
 
 
 def create_app(settings_module):
     app = Flask(__name__)
     app.config.from_object(settings_module)
 
-    db.init_app(app) #CHECK
-    ma.init_app(app)
+    # db.init_app(app) 
+    marsh.init_app(app)
 
     Api(app, catch_all_404s=True)
 
@@ -46,6 +46,6 @@ def register_error_handlers(app):
     def handle_app_base_error(e):
         return jsonify({'msg': str(e)}), 500
 
-    @app.errorhandler(ObjectNotFound)
+    @app.errorhandler(ObjectNoFound)
     def handle_object_not_found_error(e):
         return jsonify({'msg': str(e)}), 404
