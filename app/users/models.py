@@ -14,7 +14,7 @@ class User:
 
 class DBUsers:
     def __init__(self):
-        users = {}
+        self.users = {}
 
     def create(self, user: User):
         if user.id in self.users:
@@ -58,8 +58,8 @@ class DBUsers:
 
 
 class DBPost:
-    def __init__():
-        posts = {}
+    def __init__(self):
+        self.posts = {}
     
     def create(self, post: Post):
         if post.id in self.posts:
