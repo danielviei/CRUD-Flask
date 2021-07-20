@@ -1,3 +1,4 @@
+from app.common.error_handling import ObjectNoFound
 from flask import request, Blueprint 
 from flask_restful import Api, Resource
 
@@ -17,7 +18,7 @@ class UserResource(Resource):
         if b:
             ret = userSchema.dump(use)
         else:
-            ret = 404 #retornar error
+            raise ObjectNoFound('El usuario no existe')
         return ret
 
 #make post, delete and update methods
