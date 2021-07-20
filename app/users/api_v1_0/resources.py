@@ -13,7 +13,12 @@ api = Api(userPostBP)
 
 class UserResource(Resource):
     def get(self, user: User):
-        return DBUsers.read(user)
+        b, use = DBUsers.read(user)
+        if b:
+            ret = userSchema.dump(use)
+        else:
+            ret = 404 #retornar error
+        return ret
 
 #make post, delete and update methods
 
