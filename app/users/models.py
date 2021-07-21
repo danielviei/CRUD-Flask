@@ -1,20 +1,34 @@
 import datetime
 import array
 
+from marshmallow.fields import DateTime
+
 class Post:
     id: int
     user: int
     date: datetime
     content: str
 
+    def __init__(self, id: int, user: int, date: DateTime, content:str):
+        self.id = id
+        self.user = user
+        self.date = date
+        self.content = content
+
 class User:
     id: int
     username: str
     mail: str
 
+    def __init__(self, id:int, username:str, mail: str):
+        self.id = id
+        self.username = username
+        self.mail = mail
+
 class DBUsers:
-    def __init__(self):
-        self.users = {}
+    users = {
+            0 : {"id": 0, "username": "daniel", "mail":"danielvieiucv@gmail.com"}
+            }
 
     def create(self, user: User):
         if user.id in self.users:
@@ -23,7 +37,7 @@ class DBUsers:
             self.users[user.id] = user
             return True
     
-    def delete(self, userID: int):
+    def deleteByID(self, userID: int):
         if userID in self.users:
             del self.users[userID]
             return True
@@ -44,11 +58,11 @@ class DBUsers:
         else:
             return False
 
-    def read(self, userID: int):
-        if userID in self.users:
-            return (True, self.users[userID])
+    def readByID(userID: int):
+        if userID in DBUsers.users:
+            return (True, DBUsers.users[userID])
         else:
-            return False
+            return (False, None)
 
     def read(self, user: User):
         if user.id in self.users:
@@ -58,8 +72,9 @@ class DBUsers:
 
 
 class DBPost:
-    def __init__(self):
-        self.posts = {}
+    posts = {
+            0 : {"id": 0, "user": 0, "date": "01/01/2021", "content": "Test Post"}
+            }
     
     def create(self, post: Post):
         if post.id in self.posts:
@@ -68,7 +83,7 @@ class DBPost:
             self.posts[post.id] = post
             return True
     
-    def delete(self, postID: int):
+    def deleteByID(self, postID: int):
         if postID in self.posts:
             del self.posts[postID]
             return True
@@ -89,11 +104,11 @@ class DBPost:
         else:
             return False
 
-    def read(self, postID: int):
+    def readByID(self, postID: int):
         if postID in self.posts:
             return (True, self.posts[postID])
         else:
-            return False
+            return (False, None)
 
     def read(self, post: Post):
         if post.id in self.users:

@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from flask_restful import Api
 
-from app.common.error_handling import ObjectNoFound, AppErrorBaseClass
+from app.common.error_handling import ObjectNotFound, AppErrorBaseClass
 from app.db import db
 from app.users.api_v1_0.resources import userPostBP
 from .ext import marsh
@@ -46,6 +46,6 @@ def register_error_handlers(app):
     def handle_app_base_error(e):
         return jsonify({'msg': str(e)}), 500
 
-    @app.errorhandler(ObjectNoFound)
+    @app.errorhandler(ObjectNotFound)
     def handle_object_not_found_error(e):
-        return jsonify({'msg': str(e)}), 404
+        return jsonify({'msg': str(e)}), 409
