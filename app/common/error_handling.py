@@ -1,6 +1,6 @@
 class AppErrorBaseClass(Exception):
     pass
 
-class ObjectNoFound(AppErrorBaseClass):
+class ObjectNotFound(AppErrorBaseClass):
     pass
 
