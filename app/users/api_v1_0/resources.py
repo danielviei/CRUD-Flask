@@ -2,6 +2,7 @@ from marshmallow.fields import DateTime
 from app.common.error_handling import ObjectNotFound
 from flask import request, Blueprint 
 from flask_restful import Api, Resource
+from app.db import db
 
 from ..models import DBPost, DBUsers, User, Post
 from .schemas import UserSchema, PostSchema
@@ -14,35 +15,37 @@ postSchema = PostSchema()
 api = Api(userPostBP)
 
 class UserResource(Resource):
-    def get(self, userID: int):
-        b, user = DBUsers.readByID(userID=userID)
+    def get(self, userID: int, username: str, mail: str):
+        u = User(userID, username, mail)
+        b, user = db.dbUsers.read(u)
         if b:
             return userSchema.dump(user), 200
         else:
-            raise ObjectNotFound("Can't find user with id = " + userID)
+            raise ObjectNotFound("Can't find user with id = " + str(userID))
 
     def post(self, userID: int, username: str, mail: str):
         user = User(userID, username, mail)
-        b = DBUsers.create(user)
+        b = db.dbUsers.create(user)
         if b:
             return {"msg": "User created"}, 200
         else:
             raise ObjectNotFound('User already exist')
 
-    def update(self, userID: int, username: str, mail: str):
+    def put(self, userID: int, username: str, mail: str):
         user = User(userID, username, mail)
-        b = DBUsers(user)
+        b = db.dbUsers.update(user)
         if b:
-            return {'msg': 'User ' + userID + ' updated'}, 200
+            return {'msg': 'User ' + str(userID) + ' updated'}, 200
         else:
-            raise ObjectNotFound("Can't find user with id = " + userID)
+            raise ObjectNotFound("Can't find user with id = " + str(userID))
 
-    def delete(self, userID: int):
-        b = DBUsers.deleteByID(userID)
+    def delete(self, userID: int, username: str, mail: str):
+        user = User(userID, username, mail)
+        b = db.dbUsers.delete(user)
         if b:
-            return {'msg': 'User ' + userID + ' deleted'}, 200
+            return {'msg': 'User ' + str(userID) + ' deleted'}, 200
         else:
-            raise ObjectNotFound("Can't find user with id = " + userID)
+            raise ObjectNotFound("Can't find user with id = " + str(userID))
 
 class PostResource(Resource):
     def get(self, postID: int):
@@ -77,5 +80,6 @@ class PostResource(Resource):
         else:
             raise ObjectNotFound("Can't found post with ID = " + postID)
 
-api.add_resource(UserResource, '/api/v1.0/userID/<int:userID>', endpoint='user_resource')
-#add resource PostResource
+# api.add_resource(UserResource, '/api/v1.0/get_user/<int:userID>', endpoint='user_resource')
+api.add_resource(UserResource, '/api/v1.0/user/<int:userID>/<string:username>/<string:mail>', endpoint='user_resource')
+api.add_resource(PostResource, '/api/v1.0/postID/<int:postID>', endpoint='post_resource')
