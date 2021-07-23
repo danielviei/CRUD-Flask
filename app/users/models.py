@@ -26,6 +26,7 @@ class User:
         self.mail = mail
 
 class DBUsers:
+    # users: dict[int, dict[str, object]]
     users = {
             0 : {"id": 0, "username": "daniel", "mail":"danielvieiucv@gmail.com"}
             }
@@ -68,7 +69,7 @@ class DBUsers:
         if user.id in self.users:
             return (True, self.users[user.id])
         else:
-            return False
+            return (False, None)
 
 
 class DBPost:
