@@ -1,7 +1,7 @@
-import datetime
-import array
+from datetime import datetime
 
-from marshmallow.fields import DateTime
+def toDate(dateString): 
+    return datetime.datetime.strptime(dateString, "%Y-%m-%d").date()
 
 class Post:
     id: int
@@ -9,7 +9,7 @@ class Post:
     date: datetime
     content: str
 
-    def __init__(self, id: int, user: int, date: DateTime, content:str):
+    def __init__(self, id: int, user: int, date: datetime, content:str):
         self.id = id
         self.user = user
         self.date = date
@@ -26,99 +26,112 @@ class User:
         self.mail = mail
 
 class DBUsers:
-    # users: dict[int, dict[str, object]]
-    users = {
-            0 : {"id": 0, "username": "daniel", "mail":"danielvieiucv@gmail.com"}
-            }
+    def __init__(self):
+        self.users = []
 
     def create(self, user: User):
-        if user.id in self.users:
-            return False
-        else:
-            self.users[user.id] = user
-            return True
+        if self.users:
+            for usr in self.users:
+                if usr.id == user.id:
+                    return False
+        self.users.append(user)
+        return True
     
-    def deleteByID(self, userID: int):
-        if userID in self.users:
-            del self.users[userID]
-            return True
-        else:
-            return False
+    def deleteByID(self, userID: int, db = None):
+        if self.users:
+            for i, user in enumerate(self.users):
+                if user.id == userID:
+                    del self.users[i]
+                    # uncommet if need remove users post when user is deleted
+                    # db.dbPost.deleteUserPost(userID)
+                    return True
+        return False
     
     def delete(self, user: User):
-        if user.id in self.users:
-            del self.users[user.id]
-            return True
-        else:
-            return False
+        if self.users:
+            for i, usr in enumerate(self.users):
+                if usr.id == user:
+                    del self.users[i]
+                    return True
+        return False
 
     def update(self, user: User):
-        if user.id in self.users:
-            self.users[user.id] = user
-            return True
-        else:
-            return False
+        if self.users:
+            for i, usr in enumerate(self.users):
+                if usr.id == user.id:
+                    self.users[i] = user
+                    return True
+        return False
 
-    def readByID(userID: int):
-        if userID in DBUsers.users:
-            return (True, DBUsers.users[userID])
-        else:
-            return (False, None)
+    def readByID(self, userID: int):
+        if self.users:
+            for user in self.users:
+                print(user.id)
+                if user.id == userID:
+                    return (True, user)
+        return (False, None)
 
     def read(self, user: User):
-        if user.id in self.users:
-            return (True, self.users[user.id])
-        else:
-            return (False, None)
-
+        if self.users:
+            for usr in self.users:
+                print(usr.id)
+                if usr.id == user.id:
+                    return (True, usr)
+        return (False, None)
 
 class DBPost:
-    posts = {
-            0 : {"id": 0, "user": 0, "date": "01/01/2021", "content": "Test Post"}
-            }
+    def __init__(self):
+        self.posts = []
     
     def create(self, post: Post):
-        if post.id in self.posts:
-            return False
-        else:
-            self.posts[post.id] = post
-            return True
+        if self.posts:
+            for pst in self.posts:
+                if pst.id == post.id:
+                    return False
+        self.posts.append(post)
+        return True
     
     def deleteByID(self, postID: int):
-        if postID in self.posts:
-            del self.posts[postID]
-            return True
-        else:
-            return False
+        if self.posts:
+            for i, post in enumerate(self.posts):
+                if post.id == postID:
+                    del self.posts[i]
+                    return True
+        return False
     
     def delete(self, post: Post):
-        if post.id in self.posts:
-            del self.posts[post.id]
-            return True
-        else:
-            return False
+        if self.posts:
+            for i, pst in self.posts:
+                if pst.id == post.id:
+                    del self.posts[i]
+                    return True
+        return False
 
     def update(self, post: Post):
-        if post.id in self.posts:
-            self.posts[post.id] = post
-            return True
-        else:
-            return False
+        if self.posts:
+            for i, pst in enumerate(self.posts):
+                if pst.id == post.id:
+                    self.posts[i] = post
+                    return True
+        return False
 
     def readByID(self, postID: int):
-        if postID in self.posts:
-            return (True, self.posts[postID])
-        else:
-            return (False, None)
+        if self.posts:
+            for post in self.posts:
+                if post.id == postID:
+                    return (True, post)
+        return (False, None)
 
     def read(self, post: Post):
-        if post.id in self.users:
-            return (True, self.users[post.id])
-        else:
-            return False
+        if self.posts:
+            for pst in self.posts:
+                if pst.id == post.id:
+                    return (True, self.posts[post.id])
+        return (False, None)
     
     def deleteUserPost(self, userID: int):
-        for post in self.posts:
-            if post.user == userID:
-                del self.posts[post.id]
+        if self.posts:
+            for i, post in enumerate(self.posts):
+                if post.user == userID:
+                    del self.posts[i]
 

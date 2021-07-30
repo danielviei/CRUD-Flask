@@ -1,4 +1,4 @@
-from app.users.models import *
+from app.users.models import DBPost, DBUsers
 
 class DB():
     dbUsers = DBUsers()
